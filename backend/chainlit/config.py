@@ -58,7 +58,7 @@ multi_modal = true
 
 [UI]
 # Name of the app and chatbot.
-name = "Chatbot"
+name = "Copilot"
 
 # Show the readme while the conversation is empty.
 show_readme_as_default = true
@@ -88,7 +88,7 @@ hide_cot = false
     #paper = "#FFFFFF"
 
     [UI.theme.light.primary]
-        #main = "#F80061"
+        #main = "#009ee2"
         #dark = "#980039"
         #light = "#FFE7EB"
 
@@ -98,7 +98,7 @@ hide_cot = false
     #paper = "#FFFFFF"
 
     [UI.theme.dark.primary]
-        #main = "#F80061"
+        #main = "#009ee2"
         #dark = "#980039"
         #light = "#FFE7EB"
 
