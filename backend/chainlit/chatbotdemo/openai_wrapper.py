@@ -5,7 +5,7 @@ import datetime
 from typing import Dict, Optional
 from textwrap import dedent
 
-import openai
+from openai import OpenAI
 import config
 from dotenv import load_dotenv
 from rich import print as printr
@@ -60,25 +60,27 @@ class PersonInformation:
 class OpenAi:
     MODEL = "gpt-3.5-turbo"
     LANGUAGE = "English"
-    MAX_SENTENCES_SUMMARY = 6
+    MAX_SENTENCES_SUMMARY = 5
     MAX_REPEATS = 5
     cfg: config.Config = config.Config()
+    client = None
 
     def __init__(self) -> None:
         load_dotenv()
         key_value = os.environ.get("openai.api_key")
-        openai.api_key = key_value
+        self.client = OpenAI(api_key=key_value)
+
 
     def request_openai(self, prompt: str, system_hint: Optional[str] = None) -> Dict:
         messages = [{"role": "user", "content": prompt}]
         if system_hint:
             messages.append({"role": "system", "content": system_hint})
-        return openai.ChatCompletion.create(model=self.MODEL, messages=messages)
+        return self.client.chat.completions.create(model=self.MODEL, messages=messages)
 
     def transcribe(self, mp3_path) -> str:
         audio_file = open(mp3_path, "rb")
 
-        response = openai.Audio.transcribe("whisper-1", audio_file)
+        response = self.client.audio.transcribe("whisper-1", audio_file)
         raw_text = response["text"]  # type: ignore
         text = raw_text.strip()
         printr(f"[{PRINT_COLOR_USER}]User (transcribed): `{text}`")
@@ -102,10 +104,7 @@ class OpenAi:
 		""")
 
         response = self.request_openai(prompt)
-        choice: Choice = response["choices"][0]  # type: ignore
-        message = choice.message
-        greeting = message.content.strip()
-        return greeting
+        return response.choices[0].message.content.strip()
 
     def create_ending(self, person_information: PersonInformation, successful_call: bool) -> str:
         now = datetime.datetime.now()
@@ -122,18 +121,12 @@ class OpenAi:
 		Answer in {self.LANGUAGE}. \
 		Answer only with the ending text."
 
-        response = openai.ChatCompletion.create(
-            model=self.MODEL,
-            messages=[
-                {"role": "user", "content": prompt},
-            ]
-        )
+        response = self.client.chat.completions.create(model=self.MODEL,
+        messages=[
+            {"role": "user", "content": prompt},
+        ])
 
-        choice: Choice = response["choices"][0]  # type: ignore
-        message = choice.message
-        ending = message.content.strip()
-
-        return ending
+        return response.choices[0].message.content.strip()
 
     def fake_perform_service(self, customer_name: str, service_name: str) -> str:
         prompt = f"Your are a person working at the customer support. \
@@ -143,28 +136,22 @@ class OpenAi:
 		Answer in {self.LANGUAGE}. \
 		Only respond the confirmation sentence."
 
-        response = openai.ChatCompletion.create(
-            model=self.MODEL,
-            messages=[
-                {"role": "user", "content": prompt},
-            ]
-        )
+        response = self.client.chat.completions.create(model=self.MODEL,
+        messages=[
+            {"role": "user", "content": prompt},
+        ])
 
-        choice: Choice = response["choices"][0]  # type: ignore
-        message = choice.message
-        greeting = message.content.strip()
-        return greeting
+        return response.choices[0].message.content.strip()
 
     def summarize(self, content: str, source_doc: Optional[str] = None,
                   max_sentences_summary: int = MAX_SENTENCES_SUMMARY) -> str:
-        prompt = f"Your are a person working at the customer support. \
-		Summarize the following in max {max_sentences_summary} sentences and mention that the source is the `{source_doc}` document: {content}"
+        prompt = f"Du bist ein Supportsystem im Bereich Banken und Compliance. \
+		Fasse das Folgende in maximal {max_sentences_summary} Sätzen zusammen und erwähne immer dass die Quelle `{source_doc}` ist. Der Inhalt: {content}"
+        # prompt = f"Your are a person working at the customer support. \
+		# Summarize the following in max {max_sentences_summary} sentences and mention that the source is the `{source_doc}` document: {content}"
 
         response = self.request_openai(prompt)
-        choice: Choice = response["choices"][0]  # type: ignore
-        message = choice.message
-        answer = message.content.strip()
-        return answer
+        return response.choices[0].message.content.strip()
 
     def check_for_consent(self, statement_to_interpret: str) -> bool:
         prompt = f"Interpret a statement whether it is a consent or not. \
@@ -179,9 +166,7 @@ class OpenAi:
         while repeats < self.MAX_REPEATS:
             try:
                 response = self.request_openai(prompt)
-                choice: Choice = response["choices"][0]  # type: ignore
-                message = choice.message
-                json_content = message.content.strip()
+                json_content = response.choices[0].message.content.strip()
                 resp = json.loads(json_content)
                 consent = resp["consent"]
                 return consent
@@ -201,9 +186,7 @@ class OpenAi:
 			END OF STATEMENT TO INTERPRET"
 
         response = self.request_openai(prompt)
-        choice: Choice = response["choices"][0]  # type: ignore
-        message = choice.message
-        json_content = message.content
+        json_content = response.choices[0].message.content.strip()
         resp = json.loads(json_content)
         consent = resp["anythingToDo"]
         return consent
@@ -223,9 +206,7 @@ class OpenAi:
         while repeats < self.MAX_REPEATS:
             try:
                 response = self.request_openai(prompt)
-                choice: Choice = response["choices"][0]  # type: ignore
-                message = choice.message
-                json_content = message.content
+                json_content = response.choices[0].message.content.strip()
                 resp = json.loads(json_content)
                 consent = resp["wantEmailConfirmation"]
                 return consent
@@ -241,9 +222,7 @@ class OpenAi:
 			END OF TEXT'
 
         response = self.request_openai(prompt)
-        choice: Choice = response["choices"][0]  # type: ignore
-        message = choice.message
-        mood_candidate = message.content
+        mood_candidate = response.choices[0].message.content
         mood_candidate = clean_to_raw_answer(mood_candidate)
         mood = Happiness[mood_candidate.upper()]
         return mood
@@ -261,9 +240,7 @@ class OpenAi:
 		Include all options in your answer."
 
         response = self.request_openai(prompt)
-        choice: Choice = response["choices"][0]  # type: ignore
-        message = choice.message
-        question_with_options = message.content.strip()
+        question_with_options = response.choices[0].message.content.strip()
         options_question = QuestionWithOptions(question_with_options, choices)
         return options_question
 
@@ -286,9 +263,7 @@ class OpenAi:
 		If you could not find a match 'selected_option' is \"NONE\" "
 
         response = self.request_openai(prompt)
-        choice: Choice = response["choices"][0]  # type: ignore
-        message = choice.message
-        json_content = message.content.strip()
+        json_content = response.choices[0].message.content.strip()
         resp = json.loads(json_content)
         selected_option = resp["selected_option"]
         return selected_option
@@ -304,17 +279,13 @@ class OpenAi:
 			PROTOCOL END "
 
             # response = self.request_openai(prompt, "You are a helpful assistant.")
-            response = openai.ChatCompletion.create(
-                model=self.MODEL,
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": prompt},
-                ]
-            )
+            response = self.client.chat.completions.create(model=self.MODEL,
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt},
+            ])
 
-            choice: Choice = response["choices"][0]  # type: ignore
-            message = choice.message
-            german_summary = message.content.strip()
+            german_summary = response.choices[0].message.content.strip()
             with open(self.cfg.get_german_summary_path(), 'w') as summary_file:
                 summary_file.write(german_summary)
                 print(f"Create a summary of the protocol in German written to: {self.cfg.get_german_summary_path()}")

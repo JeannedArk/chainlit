@@ -29,7 +29,8 @@ async def chainlit_on_start():
     """
     This function will be called when the chat starts
     """
-    await prompt_message("Hello, I am your AI assistant. What's your technical question?")
+    printi("Starting chat...")
+    await prompt_message("Hallo, ich bin der KI Assistent für Bankenauflagen und Compliance-Richtlinien. Wie kann ich Ihnen helfen?")
 
 
 @cl.on_message
@@ -52,10 +53,10 @@ async def answer_technical_question(chat_input: str) -> None:
             printi("Requesting OpenAI to summarize response...")
             azure_search_answer = azure_search_resp.answers[0]
             answer_summarized = openai.summarize(azure_search_answer.answer, azure_search_answer.source)
-            await prompt_message(f"Your answer is: {answer_summarized}")
+            await prompt_message(answer_summarized)
             printi(f"Answer: `{answer_summarized}`")
             printi("Question answered to human.")
             asking_for_questions = False
         else:
             printi("Something went wrong. No answer was found. Will try again...")
-            await prompt_message("Sorry, no answer could be found.")
+            await prompt_message("Entschuldigung, ich konnte keine Antwort finden.")

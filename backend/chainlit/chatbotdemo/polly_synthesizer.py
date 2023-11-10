@@ -22,11 +22,15 @@ class PollySynthesizer:
         debug_print("Requesting Amazon Polly...")
         try:
             # Request speech synthesis
+            # https://docs.aws.amazon.com/polly/latest/dg/voicelist.html
             response = self.polly.synthesize_speech(
                 Text=text,
                 OutputFormat="mp3",
-                VoiceId="Ruth",
-                Engine="neural"
+                # VoiceId="Ruth",
+                VoiceId="Vicki",
+                Engine="neural",
+                # Engine="standard",
+                LanguageCode="de-DE",
             )
         except (BotoCoreError, ClientError) as error:
             # The service returned an error, exit gracefully
