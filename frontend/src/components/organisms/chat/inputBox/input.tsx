@@ -218,12 +218,12 @@ const Input = memo(
               <KeyboardVoiceIcon />
             </IconButton>
           ))}
-        <UploadButton
-          disabled={disabled}
-          fileSpec={fileSpec}
-          onFileUploadError={onFileUploadError}
-          onFileUpload={onFileUpload}
-        />
+        {/*<UploadButton*/}
+        {/*  disabled={disabled}*/}
+        {/*  fileSpec={fileSpec}*/}
+        {/*  onFileUploadError={onFileUploadError}*/}
+        {/*  onFileUpload={onFileUpload}*/}
+        {/*/>*/}
       </>
     );
     const endAdornment = (
@@ -251,20 +251,20 @@ const Input = memo(
           }
         }}
       >
-        {fileElements.length > 0 ? (
-          <Box
-            sx={{
-              mt: 2,
-              mx: 2,
-              padding: '2px'
-            }}
-          >
-            <Attachments
-              fileElements={fileElements}
-              setFileElements={setFileElements}
-            />
-          </Box>
-        ) : null}
+        {/*{fileElements.length > 0 ? (*/}
+        {/*  <Box*/}
+        {/*    sx={{*/}
+        {/*      mt: 2,*/}
+        {/*      mx: 2,*/}
+        {/*      padding: '2px'*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    <Attachments*/}
+        {/*      fileElements={fileElements}*/}
+        {/*      setFileElements={setFileElements}*/}
+        {/*    />*/}
+        {/*  </Box>*/}
+        {/*) : null}*/}
 
         <TextField
           inputRef={ref}
@@ -273,7 +273,7 @@ const Input = memo(
           multiline
           variant="standard"
           autoComplete="false"
-          placeholder={'Type your message here...'}
+          placeholder={'Geben Sie eine Frage zu Bankenauflagen oder Compliance-Richtlinien ein...'}
           disabled={disabled}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}

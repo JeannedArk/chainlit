@@ -78,9 +78,9 @@ const Nav = ({ dataPersistence, hasReadme, matches }: NavProps) => {
 
   const tabs = [{ to: '/', label: 'Chat' }];
 
-  if (hasReadme) {
-    tabs.push({ to: '/readme', label: 'Readme' });
-  }
+  // if (hasReadme) {
+  //   tabs.push({ to: '/readme', label: 'Readme' });
+  // }
 
   const nav = (
     <Stack direction={matches ? 'column' : 'row'} spacing={1}>

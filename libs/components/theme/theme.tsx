@@ -65,15 +65,15 @@ const darkTheme = createTheme({
       paper: grey[900]
     },
     primary: {
-      main: '#F80061',
+      main: '#009ee2',
       dark: primary[800],
-      light: '#FFE7EB',
+      light: '#ccf0ff',
       contrastText: white
     },
     secondary: {
-      main: '#9757D7',
-      dark: '#763FB8',
-      light: '#B87FE7',
+      main: '#99e0ff',
+      dark: '#006b99',
+      light: '#99e0ff',
       contrastText: white
     },
     divider: grey[800],
@@ -97,15 +97,15 @@ const lightTheme = createTheme({
       paper: white
     },
     primary: {
-      main: '#F80061',
+      main: '#009ee2',
       dark: primary[800],
-      light: '#FFE7EB',
+      light: '#ccf0ff',
       contrastText: white
     },
     secondary: {
-      main: '#9757D7',
-      dark: '#763FB8',
-      light: '#B87FE7',
+      main: '#99e0ff',
+      dark: '#006b99',
+      light: '#99e0ff',
       contrastText: white
     },
     divider: grey[200],
