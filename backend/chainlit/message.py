@@ -138,6 +138,39 @@ class MessageBase(ABC):
 
         return self.id
 
+    async def send_transcribed_message(self):
+        print(f"MessageBase send_transcribed_message: {self.content}")
+        if self.content is None:
+            self.content = ""
+
+        if config.code.author_rename:
+            self.author = await config.code.author_rename(self.author)
+
+        # id: str
+        # author: str
+        # content: str = ""
+        # streaming = False
+        # created_at: Union[int, str, None] = None
+        # fail_on_persist_error: bool = False
+        # persisted = False
+
+        msg_dict = {
+            "id": self.id,
+            "author": self.author,
+            "content": self.content,
+            "streaming": self.streaming,
+            "created_at": self.created_at,
+            "fail_on_persist_error": self.fail_on_persist_error,
+            "persisted": self.persisted,
+        }
+
+        if self.streaming:
+            self.streaming = False
+
+        await context.emitter.send_transcribed_message(msg_dict)
+
+        return self.id
+
     async def stream_token(self, token: str, is_sequence=False):
         """
         Sends a token to the UI. This is useful for streaming messages.

@@ -226,10 +226,45 @@ async def process_message(session: WebsocketSession, payload: UIMessagePayload):
 @socket.on("ui_message")
 async def message(sid, payload: UIMessagePayload):
     """Handle a message sent by the User."""
+    print(f"socket ui_message: {str(sid)}")
     session = WebsocketSession.require(sid)
     session.should_stop = False
 
     await process_message(session, payload)
+
+
+async def process_start_recording(session: WebsocketSession):
+    try:
+        context = init_ws_context(session)
+        await context.emitter.task_start()
+        # message = await context.emitter.process_user_message(payload)
+
+        if config.code.on_start_recording:
+            await config.code.on_start_recording()
+    except InterruptedError:
+        pass
+    except Exception as e:
+        logger.exception(e)
+        await ErrorMessage(
+            author="Error", content=str(e) or e.__class__.__name__
+        ).send()
+    finally:
+        await context.emitter.task_end()
+
+
+@socket.on("ui_start_recording")
+async def start_recording(sid):
+    print(f"ui_start_recording: {str(sid)}")
+    session = WebsocketSession.require(sid)
+    session.should_stop = False
+
+    await process_start_recording(session)
+
+
+@socket.on("ui_stop_recording")
+async def stop_recording(sid):
+    print(f"ui_stop_recording: {str(sid)}")
+    await config.code.on_stop_recording()
 
 
 async def process_action(action: Action):

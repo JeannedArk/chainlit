@@ -42,6 +42,8 @@ import {
   tokenCountState
 } from './state';
 import { IMessageUpdate, IToken } from './useChatData';
+import { useChatInteract } from 'hooks/useChat/useChatInteract';
+import { v4 as uuidv4 } from 'uuid';
 
 const useChatSession = () => {
   const sessionId = useRecoilValue(sessionIdState);
@@ -61,6 +63,8 @@ const useChatSession = () => {
   const setTokenCount = useSetRecoilState(tokenCountState);
   const [chatProfile, setChatProfile] = useRecoilState(chatProfileState);
   const idToResume = useRecoilValue(conversationIdToResumeState);
+
+  const { addAMessage } = useChatInteract();
 
   const _connect = useCallback(
     ({
@@ -140,6 +144,23 @@ const useChatSession = () => {
 
       socket.on('new_message', (message: IMessage) => {
         setMessages((oldMessages) => addMessage(oldMessages, message));
+      });
+
+      socket.on('new_transcribed_message', (message: IMessage) => {
+        console.log(`new_transcribed_message`, {message})
+        // setMessages((oldMessages) => addMessage(oldMessages, message));
+        const messageToBeSent: IMessage = {
+          id: uuidv4(),
+          author: 'User',
+          authorIsUser: true,
+          content: message.content,
+          createdAt: new Date().toISOString()
+        };
+
+        // sendMessage(messageToBeSent);
+        addAMessage(messageToBeSent);
+
+        socket.emit('ui_message', { message, files: [] });
       });
 
       socket.on('init_conversation', (message: IMessage) => {

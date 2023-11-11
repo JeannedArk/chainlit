@@ -52,9 +52,9 @@ multi_modal = true
 
 # Allows user to use speech to text
 [features.speech_to_text]
-    enabled = false
+    enabled = true
     # See all languages here https://github.com/JamesBrill/react-speech-recognition/blob/HEAD/docs/API.md#language-string
-    # language = "en-US"
+    # language = "de-DE"
 
 [UI]
 # Name of the app and chatbot.
@@ -192,6 +192,7 @@ class CodeSettings:
     on_chat_end: Optional[Callable[[], Any]] = None
     on_chat_resume: Optional[Callable[["ConversationDict"], Any]] = None
     on_message: Optional[Callable[[str], Any]] = None
+    on_start_recording: Optional[Callable[[str], Any]] = None
     author_rename: Optional[Callable[[str], str]] = None
     on_settings_update: Optional[Callable[[Dict[str, Any]], Any]] = None
     set_chat_profiles: Optional[

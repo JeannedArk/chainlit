@@ -49,7 +49,7 @@ async def answer_technical_question(chat_input: str) -> None:
         # self.communication.speak_to_human("Give me a second to look that up.")
         printi("Requesting Azure language service...")
         azure_search_resp = azure_lang_service.search(chat_input)
-        if len(azure_search_resp.answers):
+        if len(azure_search_resp.answers) or azure_search_resp.answers[0] is None:
             printi("Requesting OpenAI to summarize response...")
             azure_search_answer = azure_search_resp.answers[0]
             answer_summarized = openai.summarize(azure_search_answer.answer, azure_search_answer.source)
@@ -60,3 +60,17 @@ async def answer_technical_question(chat_input: str) -> None:
         else:
             printi("Something went wrong. No answer was found. Will try again...")
             await prompt_message("Entschuldigung, ich konnte keine Antwort finden.")
+
+
+@cl.on_start_recording
+async def chainlit_on_start_recording():
+    print(f"chainlit_on_start_recording")
+    transcribed_human_input = communication.listen_to_human()
+    print(f"transcribed_human_input: {transcribed_human_input}")
+    await cl.Message(content=transcribed_human_input).send_transcribed_message()
+
+
+@cl.on_stop_recording
+async def chainlit_on_stop_recording():
+    print(f"chainlit_on_stop_recording")
+

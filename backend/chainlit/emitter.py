@@ -38,6 +38,9 @@ class BaseChainlitEmitter:
         """Stub method to send a message to the UI."""
         pass
 
+    async def send_transcribed_message(self, msg_dict: dict):
+        pass
+
     async def update_message(self, msg_dict: dict):
         """Stub method to update a message in the UI."""
         pass
@@ -130,6 +133,9 @@ class ChainlitEmitter(BaseChainlitEmitter):
     def send_message(self, msg_dict: Dict):
         """Send a message to the UI."""
         return self.emit("new_message", msg_dict)
+
+    def send_transcribed_message(self, msg_dict: dict):
+        return self.emit("new_transcribed_message", msg_dict)
 
     def update_message(self, msg_dict: Dict):
         """Update a message in the UI."""

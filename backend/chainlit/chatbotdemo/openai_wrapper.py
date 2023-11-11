@@ -80,9 +80,12 @@ class OpenAi:
     def transcribe(self, mp3_path) -> str:
         audio_file = open(mp3_path, "rb")
 
-        response = self.client.audio.transcribe("whisper-1", audio_file)
-        raw_text = response["text"]  # type: ignore
-        text = raw_text.strip()
+        response = self.client.audio.transcriptions.create(
+            model="whisper-1",
+            file=audio_file,
+            response_format="text"
+        )
+        text = response.strip()
         printr(f"[{PRINT_COLOR_USER}]User (transcribed): `{text}`")
 
         return text

@@ -54,11 +54,31 @@ const useChatInteract = () => {
     resetChatSettingsValue();
   }, [session]);
 
+  const addAMessage = useCallback(
+    (message: IMessage, files?: IFileElement[]) => {
+      console.log(`[useChatInteract] sendMessage`, {message, files})
+      setMessages((oldMessages) => addMessage(oldMessages, message));
+    }, []
+  );
+
   const sendMessage = useCallback(
     (message: IMessage, files?: IFileElement[]) => {
       setMessages((oldMessages) => addMessage(oldMessages, message));
 
+      console.log(`[useChatInteract] sendMessage`, {session, message, files})
       session?.socket.emit('ui_message', { message, files });
+    },
+    [session]
+  );
+
+  const startRecording = useCallback(() => {
+      session?.socket.emit('ui_start_recording');
+    },
+    [session]
+  );
+
+  const stopRecording = useCallback(() => {
+      session?.socket.emit('ui_stop_recording');
     },
     [session]
   );
@@ -96,7 +116,10 @@ const useChatInteract = () => {
     callAction,
     clear,
     replyMessage,
+    addAMessage,
     sendMessage,
+    startRecording,
+    stopRecording,
     stopTask,
     setIdToResume,
     updateChatSettings

@@ -142,6 +142,18 @@ def on_message(func: Callable) -> Callable:
 
 
 @trace
+def on_start_recording(func: Callable) -> Callable:
+    config.code.on_start_recording = wrap_user_function(func)
+    return func
+
+
+@trace
+def on_stop_recording(func: Callable) -> Callable:
+    config.code.on_stop_recording = wrap_user_function(func)
+    return func
+
+
+@trace
 def on_chat_start(func: Callable) -> Callable:
     """
     Hook to react to the user websocket connection event.

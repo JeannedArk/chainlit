@@ -15,8 +15,8 @@ import {
   Attachments,
   FileSpec,
   IFileElement,
-  IFileResponse,
-  useChatData
+  IFileResponse, IMessage,
+  useChatData, useChatInteract
 } from '@chainlit/components';
 
 import HistoryButton from 'components/organisms/chat/history';
@@ -26,6 +26,7 @@ import { chatHistoryState } from 'state/chatHistory';
 import { chatSettingsOpenState, projectSettingsState } from 'state/project';
 
 import UploadButton from './UploadButton';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Props {
   fileSpec: FileSpec;
@@ -61,9 +62,7 @@ const Input = memo(
     const [lastTranscript, setLastTranscript] = useState('');
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
-    const showTextToSpeech =
-      pSettings?.features.speech_to_text?.enabled &&
-      browserSupportsSpeechRecognition;
+    const { startRecording, stopRecording } = useChatInteract();
 
     useEffect(() => {
       const pasteEvent = (event: ClipboardEvent) => {
@@ -191,33 +190,36 @@ const Input = memo(
             <TuneIcon />
           </IconButton>
         )}
-        {showTextToSpeech &&
-          (isRecording ? (
-            <IconButton
-              disabled={disabled}
-              color="inherit"
-              onClick={() => {
-                setIsRecording(false);
-                SpeechRecognition.stopListening();
-              }}
-            >
-              <StopCircleIcon />
-            </IconButton>
-          ) : (
-            <IconButton
-              disabled={disabled}
-              color="inherit"
-              onClick={() => {
-                setIsRecording(true);
-                SpeechRecognition.startListening({
-                  continuous: true,
-                  language: pSettings?.features.speech_to_text?.language
-                });
-              }}
-            >
-              <KeyboardVoiceIcon />
-            </IconButton>
-          ))}
+        {(isRecording ? (
+          <IconButton
+            disabled={disabled}
+            color="inherit"
+            onClick={() => {
+              setIsRecording(false);
+              // SpeechRecognition.stopListening();
+
+              stopRecording()
+            }}
+          >
+            <StopCircleIcon/>
+          </IconButton>
+        ) : (
+          <IconButton
+            disabled={disabled}
+            color="inherit"
+            onClick={() => {
+              setIsRecording(true);
+              // SpeechRecognition.startListening({
+              //   continuous: true,
+              //   language: "de-DE"
+              // });
+
+              startRecording()
+            }}
+          >
+            <KeyboardVoiceIcon/>
+          </IconButton>
+        ))}
         {/*<UploadButton*/}
         {/*  disabled={disabled}*/}
         {/*  fileSpec={fileSpec}*/}
