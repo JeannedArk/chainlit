@@ -1,10 +1,8 @@
-import threading
-import asyncio
-
 import chainlit as cl
+from rich import print
+import openai_wrapper as openaiw
 import azure_lang_service
 import ai_communication
-import openai_wrapper as openaiw
 
 
 PRINT_COLOR = "blue"
@@ -38,28 +36,18 @@ async def chainlit_on_message(message: cl.Message):
     """
     This function will be called every time a user inputs a message in the UI
     """
-    await answer_technical_question(message.content)
-
-
-async def answer_technical_question(chat_input: str) -> None:
-    asking_for_questions = True
-    while asking_for_questions:
-        # tech_question = self.communication.listen_to_human()
-
-        # self.communication.speak_to_human("Give me a second to look that up.")
-        printi("Requesting Azure language service...")
-        azure_search_resp = azure_lang_service.search(chat_input)
-        if len(azure_search_resp.answers) or azure_search_resp.answers[0] is None:
-            printi("Requesting OpenAI to summarize response...")
-            azure_search_answer = azure_search_resp.answers[0]
-            answer_summarized = openai.summarize(azure_search_answer.answer, azure_search_answer.source)
-            await prompt_message(answer_summarized)
-            printi(f"Answer: `{answer_summarized}`")
-            printi("Question answered to human.")
-            asking_for_questions = False
-        else:
-            printi("Something went wrong. No answer was found. Will try again...")
-            await prompt_message("Entschuldigung, ich konnte keine Antwort finden.")
+    chat_input = message.content
+    printi(f"Azure language service search: {chat_input}")
+    azure_search_resp = azure_lang_service.search(chat_input)
+    if len(azure_search_resp.answers) or azure_search_resp.answers[0] is None:
+        printi("Requesting OpenAI to summarize response...")
+        azure_search_answer = azure_search_resp.answers[0]
+        answer_summarized = openai.summarize(azure_search_answer.answer, azure_search_answer.source)
+        printi(f"Answer: `{answer_summarized}`")
+        await prompt_message(answer_summarized)
+    else:
+        printi("Something went wrong. No answer was found.")
+        await prompt_message("Entschuldigung, ich konnte keine Antwort finden.")
 
 
 @cl.on_start_recording
@@ -73,4 +61,3 @@ async def chainlit_on_start_recording():
 @cl.on_stop_recording
 async def chainlit_on_stop_recording():
     print(f"chainlit_on_stop_recording")
-

@@ -8,14 +8,15 @@ import azure_lang_service
 
 
 QUESTIONS = [
-    # "Aus welchen Teilen besteht der Geschäftsbericht?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen
-    "Wie muss der Geschäftsbericht veröffentlicht werden?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen
-    # "Welche Auflagen gibt es zum Geschäftsbericht?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen
-    # "Was sind Auflagen zum Geschäftsbericht?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen
-    # "Was sind Anforderungen zum Geschäftsbericht?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen
-    "Was sind die Anforderungen an systemrelevante Banken?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen
-    # "Was sind die Anforderungen an Kantonalbanken?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen
-    "Was ist eine Kantonalbank?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen
+    # "Aus welchen Teilen besteht der Geschäftsbericht?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen YES
+    # "Wie muss der Geschäftsbericht veröffentlicht werden?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen YES
+    "Was sind Auflagen zum Geschäftsbericht?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen
+    "Was sind die Anforderungen an systemrelevante Banken?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen YES
+    "Was sind die Anforderungen an Kantonalbanken?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen YES
+
+    "IKT-Strategie und Governance", # FINMA Operationelle Risiken und Resilienz
+
+    "Wie sollen überfällige Zinsen behandelt werden?", # FINMA Rechnungslegungsvorschriften für Banken
 ]
 
 

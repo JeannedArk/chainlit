@@ -61,6 +61,7 @@ class OpenAi:
     MODEL = "gpt-3.5-turbo"
     LANGUAGE = "English"
     MAX_SENTENCES_SUMMARY = 5
+    MAX_CHARACTERS_SUMMARY = 580
     MAX_REPEATS = 5
     cfg: config.Config = config.Config()
     client = None
@@ -147,14 +148,18 @@ class OpenAi:
         return response.choices[0].message.content.strip()
 
     def summarize(self, content: str, source_doc: Optional[str] = None,
-                  max_sentences_summary: int = MAX_SENTENCES_SUMMARY) -> str:
+                  max_sentences_summary: int = MAX_SENTENCES_SUMMARY, max_characters_summary: int = MAX_CHARACTERS_SUMMARY) -> str:
         prompt = f"Du bist ein Supportsystem im Bereich Banken und Compliance. \
-		Fasse das Folgende in maximal {max_sentences_summary} Sätzen zusammen und erwähne immer dass die Quelle `{source_doc}` ist. Der Inhalt: {content}"
+		Fasse das Folgende in maximal {max_sentences_summary} Sätzen und maximal {max_characters_summary} Zeichen zusammen. Der Inhalt: {content}"
         # prompt = f"Your are a person working at the customer support. \
 		# Summarize the following in max {max_sentences_summary} sentences and mention that the source is the `{source_doc}` document: {content}"
 
         response = self.request_openai(prompt)
-        return response.choices[0].message.content.strip()
+        answer = response.choices[0].message.content.strip()
+        print(f"Summarize content=`{content} answer=`{answer}` source_doc=`{source_doc}`")
+        if source_doc is not None:
+            answer += f" (Quelle: {source_doc})"
+        return answer
 
     def check_for_consent(self, statement_to_interpret: str) -> bool:
         prompt = f"Interpret a statement whether it is a consent or not. \

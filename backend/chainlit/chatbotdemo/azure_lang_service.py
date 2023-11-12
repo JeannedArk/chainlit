@@ -5,14 +5,13 @@ from typing import List
 import requests
 
 
-ENV_NAME_OCP_APIM_SUBSCRIPTION_KEY = "ENV_OCP_APIM_SUBSCRIPTION_KEY"
-
-COGNITIVE_SEARCH_ENDPOINT = "https://ai-demo-2-timo-language-service.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=AKBBankingComplianceDemo&api-version=2021-10-01&deploymentName=production"
 NUM_ANSWERS = 2
 CONFIDENCE_SCORE_THRESHOLD = 0.4
 
 PDF_NAME_TITLE_MAPPING = {
     "Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen.pdf": "Bundesgesetz über die Banken und Sparkassen",
+    "finma Operationelle Risiken und Resilienz.pdf": "finma Operationelle Risiken und Resilienz",
+    "finma Rechnungslegungsvorschriften für Banken.pdf": "finma Rechnungslegungsvorschriften für Banken",
 }
 
 
@@ -72,8 +71,8 @@ def search(question) -> AzureSearchResponse:
     }
     headers = {
         "Content-Type": "application/json",
-        "Ocp-Apim-Subscription-Key": get_env_var(ENV_NAME_OCP_APIM_SUBSCRIPTION_KEY),
+        "Ocp-Apim-Subscription-Key": get_env_var("ENV_OCP_APIM_SUBSCRIPTION_KEY"),
     }
-    resp = requests.post(COGNITIVE_SEARCH_ENDPOINT, json=body, headers=headers)
+    resp = requests.post(get_env_var("ENV_AZURE_COGNITIVE_SEARCH_ENDPOINT"), json=body, headers=headers)
     resp_json = resp.json()
     return AzureSearchResponse.from_json(resp_json)
