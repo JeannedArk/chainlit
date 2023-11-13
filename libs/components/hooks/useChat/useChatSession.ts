@@ -151,7 +151,7 @@ const useChatSession = () => {
         // setMessages((oldMessages) => addMessage(oldMessages, message));
         const messageToBeSent: IMessage = {
           id: uuidv4(),
-          author: 'User',
+          author: 'AKB Mitarbeiter',
           authorIsUser: true,
           content: message.content,
           createdAt: new Date().toISOString()

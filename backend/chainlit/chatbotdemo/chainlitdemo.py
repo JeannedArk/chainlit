@@ -42,6 +42,11 @@ async def chainlit_on_message(message: cl.Message):
     if len(azure_search_resp.answers) or azure_search_resp.answers[0] is None:
         printi("Requesting OpenAI to summarize response...")
         azure_search_answer = azure_search_resp.answers[0]
+        # Send intermediate answer
+        await cl.Message(
+            content=azure_search_answer.answer,
+            parent_id=message.id,
+        ).send()
         answer_summarized = openai.summarize(azure_search_answer.answer, azure_search_answer.source)
         printi(f"Answer: `{answer_summarized}`")
         await prompt_message(answer_summarized)

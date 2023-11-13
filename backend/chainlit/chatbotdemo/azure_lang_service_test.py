@@ -13,10 +13,12 @@ QUESTIONS = [
     "Was sind Auflagen zum Geschäftsbericht?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen
     "Was sind die Anforderungen an systemrelevante Banken?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen YES
     "Was sind die Anforderungen an Kantonalbanken?", # Eidgenössische Finanzmarktaufsicht FINMA Bundesgesetz über die Banken und Sparkassen YES
-
-    "IKT-Strategie und Governance", # FINMA Operationelle Risiken und Resilienz
-
+    #
+    # "IKT-Strategie und Governance", # FINMA Operationelle Risiken und Resilienz
+    #
     "Wie sollen überfällige Zinsen behandelt werden?", # FINMA Rechnungslegungsvorschriften für Banken
+    "Wie muss selbst entwickelte Software bilanziert werden?", # FINMA Rechnungslegungsvorschriften für Banken
+    "Wie sehen die Abschreibungsmethoden zu selbst entwickelter Software aus?", # FINMA Rechnungslegungsvorschriften für Banken
 ]
 
 

@@ -60,8 +60,8 @@ class PersonInformation:
 class OpenAi:
     MODEL = "gpt-3.5-turbo"
     LANGUAGE = "English"
-    MAX_SENTENCES_SUMMARY = 5
-    MAX_CHARACTERS_SUMMARY = 580
+    MAX_SENTENCES_SUMMARY = 3
+    MAX_CHARACTERS_SUMMARY = 500
     MAX_REPEATS = 5
     cfg: config.Config = config.Config()
     client = None

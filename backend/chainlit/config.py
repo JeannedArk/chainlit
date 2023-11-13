@@ -58,7 +58,7 @@ multi_modal = true
 
 [UI]
 # Name of the app and chatbot.
-name = "Copilot"
+name = "KI Assistent"
 
 # Show the readme while the conversation is empty.
 show_readme_as_default = true
